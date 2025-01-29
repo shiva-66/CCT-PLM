@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Product</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      form {
+        width: 300px;
+        padding: 20px;
+        padding-top:0px;
+        margin-top:60px;
+        background-color: #f4f4f4;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      input, select {
+        padding: 6px;
+        margin-bottom: 10px;
+        width: 95%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      input[type="submit"] {
+        padding: 10px 20px;
+        width: 100%;
+        background-color: #3592ef;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #1065bb;
+      }
+
+      .error {
+        color: red;
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+    </style>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+ body {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    padding-top: 120px; 
+}
+
+header {
+    display: flex;
+    align-items: center;
+    background-color: #4b94dd;
+    color: white;
+    padding: 15px 20px;
+    position: fixed;
+    top: 0;
+   left: 0;
+   right: 0;
+   z-index: 1000;
+}
+    
+header img {
+     height: 50px;
+    margin-right: 15px;
+}
+
+ header .company-name {
+    font-size: 24px;
+    font-weight: bold;
+    flex-grow: 1; 
+    text-align: center; 
+ }
+
+.navbar-section {
+    background-color: #4b94dd;
+    padding: 10px 0 0 0;
+    position: fixed;
+    top: 60px; 
+    left: 0;
+    right: 0;
+    z-index: 999;
+    margin-bottom: 10px;
+    margin-top:40px;
+ }
+
+.nav-link {
+    color: white !important;
+ }
+
+.nav-item {
+    list-style: none;
+    display: inline-block;
+    margin-right: 20px;
+ }
+
+.bold-text {
+    font-weight: bold;
+    
+ }
+
+</style>
+  </head>
+  <body>
+    <header>
+      <img src="logocct.jpg" style="width:100px ;height:80px ; border-radius: 230px"alt="Company Logo" />
+      <div class="company-name"><h2 style="font-weight:bold">Cloud Chain Technologies, KNR</h2></div>
+    </header>
+
+    <!-- Navbar Section -->
+    <div class="navbar-section">
+      <ul class="nav justify-content-center">
+        <li class="nav-item nav-link bold-text">
+          <h4 style="font-weight:bold">Product Life Cycle Management Tool</h4>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="Addproduct.html">Add Product</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="Generatereport.html">Generate Report</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="Searchproduct.html">Search & Edit Product</a>
+        </li>
+      </ul>
+    </div>
+    <form id="editProductForm" onsubmit="handleFormSubmit(event); return false;">
+      <h2>Edit Product</h2>
+      <label for="productName">Product Name:</label>
+      <input type="text" id="productName" name="productName" placeholder="Enter product name" required>
+      <div id="productNameError" class="error"></div>
+
+      <label for="currentStage">Current Stage:</label>
+      <input type="text" id="currentStage" name="currentStage" placeholder="Enter current stage" required>
+      <div id="currentStageError" class="error"></div>
+
+      <label for="currentExpense">Expense in Current Stage:</label>
+      <input type="number" id="currentExpense" name="currentExpense" placeholder="Enter expense" required>
+      <div id="currentExpenseError" class="error"></div>
+
+      <label for="totalExpense">Total Expense So Far:</label>
+      <input type="number" id="totalExpense" name="totalExpense" readonly>
+      <div id="totalExpenseError" class="error"></div>
+
+      <label for="stage">Move to Stage:</label>
+      <select id="stage" name="stage" required>
+        <option value="">MOVE TO STAGE</option>
+        <option value="STAGE 1">STAGE 1</option>
+        <option value="STAGE 2">STAGE 2</option>
+        <option value="STAGE 3">STAGE 3</option>
+        <option value="STAGE 4">STAGE 4</option>
+        <option value="STAGE 5">STAGE 5</option>
+      </select>
+      <div id="stageError" class="error"></div>
+
+      <input type="submit" value="Save">
+    </form>
+
+    <script>
+      // Fetch the product data from the API and pre-fill the form
+      const urlParams = new URLSearchParams(window.location.search);
+      const productName = urlParams.get('productName');
+
+      if (!productName) {
+        alert("Product name is missing.");
+        window.location.href = "index.html"; // Redirect to a list or search page
+      }
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", `https://shivadb-f348.restdb.io/rest/product-db?q={"productName":"${productName}"}`);
+      xhr.setRequestHeader("x-apikey", "657c53fe63ede92cdbf17208");
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          const productData = JSON.parse(xhr.responseText)[0];
+
+          if (productData) {
+            // Fill the form with the fetched product data
+            document.getElementById("productName").value = productData.productName;
+            document.getElementById("currentStage").value = productData.stage || '';
+            document.getElementById("currentExpense").value = '';  // Set the current expense input to be empty
+            document.getElementById("stage").value = productData.stage || '';
+
+            // Safely check and calculate total expenses
+            let totalExpense = 0;
+            if (productData.expenditure && typeof productData.expenditure === 'object') {
+              totalExpense = Object.values(productData.expenditure).reduce((sum, expense) => sum + (expense || 0), 0);
+            }
+
+            // Ensure totalExpense is a valid number
+            totalExpense = isNaN(totalExpense) ? 0 : totalExpense;
+            document.getElementById("totalExpense").value = totalExpense;
+          } else {
+            alert("Product not found.");
+          }
+        }
+      };
+
+      xhr.send();
+
+      // Function to handle form submission
+      function handleFormSubmit(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Clear previous error messages
+        document.getElementById("productNameError").textContent = "";
+        document.getElementById("currentStageError").textContent = "";
+        document.getElementById("currentExpenseError").textContent = "";
+        document.getElementById("totalExpenseError").textContent = "";
+        document.getElementById("stageError").textContent = "";
+
+        // Form validation
+        const productName = document.getElementById("productName").value.trim();
+        const currentStage = document.getElementById("currentStage").value.trim();
+        const currentExpense = parseFloat(document.getElementById("currentExpense").value);
+        let totalExpense = parseFloat(document.getElementById("totalExpense").value);
+        const newStage = document.getElementById("stage").value;
+
+        let isValid = true;
+
+        // Validate Product Name
+        if (productName.length < 3) {
+          document.getElementById("productNameError").textContent = "Product name must be at least 3 characters.";
+          isValid = false;
+        }
+
+        // Validate Current Stage
+        if (!currentStage) {
+          document.getElementById("currentStageError").textContent = "Please enter the current stage.";
+          isValid = false;
+        }
+
+        // Validate Current Expense
+        if (isNaN(currentExpense) || currentExpense < 0) {
+          document.getElementById("currentExpenseError").textContent = "Expense in current stage must be a positive number.";
+          isValid = false;
+        }
+
+        // Validate Stage
+        if (!newStage) {
+          document.getElementById("stageError").textContent = "Please select a valid stage.";
+          isValid = false;
+        }
+
+        if (!isValid) return; // Stop submission if validation fails
+
+        // Fetch the current product data again to get existing expenditure
+        const xhrGet = new XMLHttpRequest();
+        xhrGet.open("GET", `https://shivadb-f348.restdb.io/rest/product-db?q={"productName":"${productName}"}`);
+        xhrGet.setRequestHeader("x-apikey", "657c53fe63ede92cdbf17208");
+
+        xhrGet.onreadystatechange = function () {
+          if (xhrGet.readyState === 4 && xhrGet.status === 200) {
+            const productData = JSON.parse(xhrGet.responseText)[0];
+
+            if (productData) {
+              // Add the current expense to the corresponding stage
+              const updatedExpenditure = {
+                ...productData.expenditure,  // Keep the existing expenditure data
+                [`stage${newStage.split(' ')[1]}`]: currentExpense  // Add expense for the new stage (e.g., stage2)
+              };
+
+              // Prepare the updated data with the new stage and current expense
+              const updatedData = {
+                productName: productName,
+                stage: newStage,  // Update to the new stage
+                expenditure: updatedExpenditure, // Updated expenditure with new stage expense
+                updatedAt: formatTimestamp(new Date()),  // Use the function to format the updated timestamp
+                FY: productData.FY,  // Retain the fiscal year
+                createdAt: productData.createdAt,  // Keep the original createdAt value
+                _created: productData._created,  // Keep the original created timestamp
+                _changed: new Date().toISOString(),  // Update the change timestamp
+                _createdby: productData._createdby,  // Keep original creator info
+                _changedby: "api",  // Update the changed by field
+                _version: productData._version  // Keep version as is
+              };
+
+              // RestDB API update request
+              const xhrUpdate = new XMLHttpRequest();
+              xhrUpdate.open("PUT", `https://shivadb-f348.restdb.io/rest/product-db/${productData._id}`); // Use the actual product ID
+              xhrUpdate.setRequestHeader("Content-Type", "application/json");
+              xhrUpdate.setRequestHeader("x-apikey", "657c53fe63ede92cdbf17208");
+
+              xhrUpdate.onreadystatechange = function () {
+                if (xhrUpdate.readyState === 4) {
+                  if (xhrUpdate.status === 200) {
+                    alert("Product details updated successfully!");
+                  } else {
+                    alert("Failed to update product: " + xhrUpdate.responseText);
+                  }
+                }
+              };
+
+              xhrUpdate.send(JSON.stringify(updatedData));
+            }
+          }
+        };
+
+        xhrGet.send();
+      }
+
+      // Function to format the timestamp to "DD/MM/YYYY, HH:mm:ss"
+      function formatTimestamp(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
+      }
+    </script>
+  </body>
+</html>
