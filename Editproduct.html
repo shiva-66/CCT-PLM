@@ -196,8 +196,8 @@ header img {
       }
 
       const xhr = new XMLHttpRequest();
-      xhr.open("GET", `https://shivadb-f348.restdb.io/rest/product-db?q={"productName":"${productName}"}`);
-      xhr.setRequestHeader("x-apikey", "657c53fe63ede92cdbf17208");
+      xhr.open("GET", `https://htcct-21e5.restdb.io/rest/product-db?q={"productName":"${productName}"}`);
+      xhr.setRequestHeader("x-apikey", "658a94f59d539885fcc18917");
 
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -275,8 +275,8 @@ header img {
 
         // Fetch the current product data again to get existing expenditure
         const xhrGet = new XMLHttpRequest();
-        xhrGet.open("GET", `https://shivadb-f348.restdb.io/rest/product-db?q={"productName":"${productName}"}`);
-        xhrGet.setRequestHeader("x-apikey", "657c53fe63ede92cdbf17208");
+        xhrGet.open("GET", `https://htcct-21e5.restdb.io/rest/product-db?q={"productName":"${productName}"}`);
+        xhrGet.setRequestHeader("x-apikey", "658a94f59d539885fcc18917");
 
         xhrGet.onreadystatechange = function () {
           if (xhrGet.readyState === 4 && xhrGet.status === 200) {
@@ -306,9 +306,9 @@ header img {
 
               // RestDB API update request
               const xhrUpdate = new XMLHttpRequest();
-              xhrUpdate.open("PUT", `https://shivadb-f348.restdb.io/rest/product-db/${productData._id}`); // Use the actual product ID
+              xhrUpdate.open("PUT", `https://htcct-21e5.restdb.io/rest/product-db/${productData._id}`); // Use the actual product ID
               xhrUpdate.setRequestHeader("Content-Type", "application/json");
-              xhrUpdate.setRequestHeader("x-apikey", "657c53fe63ede92cdbf17208");
+              xhrUpdate.setRequestHeader("x-apikey", "658a94f59d539885fcc18917");
 
               xhrUpdate.onreadystatechange = function () {
                 if (xhrUpdate.readyState === 4) {
